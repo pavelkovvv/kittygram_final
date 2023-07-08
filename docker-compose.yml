@@ -17,7 +17,7 @@ services:
     build: ./backend/
     volumes:
       - static:/static
-      - media:/app/media/
+      - media:/media/
     depends_on:
       - db
 
