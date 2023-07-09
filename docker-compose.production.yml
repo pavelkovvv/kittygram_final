@@ -19,7 +19,7 @@ services:
     image: ${DOCKER_LOGIN}/kittygram_backend
     volumes:
       - static:/static
-      - media:/media
+      - media:/app/media
     depends_on:
       - db
 
@@ -37,6 +37,6 @@ services:
     image: ${DOCKER_LOGIN}/kittygram_gateway
     volumes:
       - static:/static
-      - media:/media
+      - media:/app/media
     ports:
       - ${NGINX_PORT}:80
