@@ -1,4 +1,4 @@
-name: Main Kitty workflow
+name: Main Kittygram workflow
 
 on:
   push:
@@ -10,14 +10,15 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:13.11
+        image: postgres:13.10
         env:
-          POSTGRES_USER: django_user
-          POSTGRES_PASSWORD: django_password
-          POSTGRES_DB: django_db
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
         ports:
           - 5432:5432
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+
     steps:
       - uses: actions/checkout@v3
       - name: Set up Python
@@ -31,9 +32,9 @@ jobs:
           pip install -r ./backend/requirements.txt
       - name: Test with flake8 and django tests
         env:
-          POSTGRES_USER: django_user
-          POSTGRES_PASSWORD: django_password
-          POSTGRES_DB: django_db
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
           DB_HOST: 127.0.0.1
           DB_PORT: 5432
         run: |
@@ -70,12 +71,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-
       - name: Install dependencies
         run: |
           cd frontend/
           npm ci
-
       - name: Test frontend
         run: |
           cd frontend/
@@ -139,19 +138,19 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           source: "docker-compose.production.yml"
-          target: "kitty"
+          target: "kittygram"
       - name: Executing remote ssh commands to deploy
         uses: appleboy/ssh-action@master
         env:
           DOCKER_LOGIN: ${{ secrets.DOCKER_USERNAME }}
-          NGINX_PORT: 9000
+          NGINX_PORT: ${{ secrets.NGINX_PORT }}
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_PASSPHRASE }}
           script: |
-            cd kitty
+            cd kittygram
             # Выполняет pull образов с Docker Hub
             sudo docker compose -f docker-compose.production.yml pull
             # Перезапускает все контейнеры в Docker Compose
@@ -160,7 +159,7 @@ jobs:
             # Выполняет миграции и сбор статики
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py migrate
             sudo docker compose -f docker-compose.production.yml exec backend python manage.py collectstatic
-            sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /static/
+            sudo docker compose -f docker-compose.production.yml exec backend cp -r /app/collected_static/. /backend_static/static/
 
   send_message:
     name: Send message to telegram
@@ -172,4 +171,4 @@ jobs:
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: Задеплоили!
+          message: kittygram_final успешно задеплоили!
