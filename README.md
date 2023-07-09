@@ -122,7 +122,7 @@
  
 ###  Cсылк на развёрнутое приложение: 
  
-- #### https://my-kittygram.ddns.net/ 
+- #### https://kittygrampraktikum.hopto.org/ 
  
  
 ### Технологии и необходимые ниструменты: 
@@ -136,7 +136,3 @@
 - Django (backend) 
 - React (frontend) 
  
- 
-### Автор 
- 
-- Сухарцев Сергей - [GitHub](https://github.com/sukhartsev-s)
