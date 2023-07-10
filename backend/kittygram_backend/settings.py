@@ -7,7 +7,7 @@ SECRET_KEY = os.getenv("SECRET_KEY", "django-insecure-123")
 
 DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = ['kittygrampraktikum.hopto.org', '127.0.0.1', 'localhost']
+ALLOWED_HOSTS = [os.getenv("ALLOWED_HOSTS", 'localhost').split(,)]
 
 INSTALLED_APPS = [
     'django.contrib.admin',
