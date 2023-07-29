@@ -10,7 +10,7 @@
  - Клонироуйте репозиторий:
  
     ```bash
-    git clone git@github.com:sukhartsev-s/kittygram_final.git
+    git clone git@github.com:pavelkovvv/kittygram_final.git
     ```
     ```bash
     cd kittygram
